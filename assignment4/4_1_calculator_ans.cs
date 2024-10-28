@@ -50,7 +50,58 @@ namespace calculator
     public class Calculator
     {
         // ---------- TODO ----------
-        
+        public int GCD(int a, int b) {
+            while (b != 0) {
+                int r = a % b;
+                a = b;
+                b = r;
+            }
+            return a;
+        }
+        public double Calculate(double num1, string op, double num2) {
+            double res = 0;
+            switch (op) {
+            case "+":
+                res = num1 + num2;
+                break;
+            case "-":
+                res = num1 - num2;
+                break;
+            case "*":
+                res = num1 * num2;
+                break;
+            case "/":
+                if (num2 == 0) throw new DivideByZeroException("Division by zero is not allowed");
+                else res = num1 / num2;
+                break;
+            case "**":
+                int b = (int)num2;
+                if (b < 0) b = -b;
+                double a = num1;
+                res = 1;
+                while (b != 0) {
+                    if ((b & 1) == 1) res *= a;
+                    a = a * a; b >>= 1;
+                }
+                if (num2 < 0) res = 1 / res;//res가 충분히 작은 경우는 무시(비트상 0인 경우)
+                break;
+            case "%":
+                if (num2 == 0) throw new DivideByZeroException("Division by zero is not allowed");
+                else res = (int)num1 / (int)num2;
+                break;
+            case "G":
+                res = GCD((int)num1, (int)num2);
+                break;
+            case "L":
+                double gcd = (double)GCD((int)num1, (int)num2);
+                if (gcd == 0) res = 0;
+                else res = num1 / gcd * num2;
+                break;
+            default:
+                throw new InvalidOperationException("Invalid operator");
+            }
+            return res;
+        }
         // --------------------
     }
 }
