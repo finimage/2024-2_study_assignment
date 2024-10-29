@@ -61,6 +61,7 @@ namespace statistics
                 Console.Write(cnt + 1);
                 if (cnt + 1 == 1) Console.WriteLine("st");
                 else if (cnt + 1 == 2) Console.WriteLine("nd");
+                else if (cnt + 1 == 3) Console.WriteLine("rd");
                 else Console.WriteLine("th");
             }
             Console.Write("\n");
@@ -86,6 +87,6 @@ Alice: 4th
 Bob: 1st
 Charlie: 5th
 David: 2nd
-Eve: 3th
+Eve: 3rd
 
 */
