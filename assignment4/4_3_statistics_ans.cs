@@ -63,7 +63,7 @@ namespace statistics
                 else if (cnt + 1 == 2) Console.WriteLine("nd");
                 else if (cnt + 1 == 3) Console.WriteLine("rd");
                 else Console.WriteLine("th");
-            } 
+            }
             Console.Write("\n");
             // --------------------
         }
