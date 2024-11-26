@@ -22,7 +22,27 @@ public class MovementManager : MonoBehaviour
         // 보드에 있는지, 다른 piece에 의해 막히는지 등을 체크
         // 폰에 대한 예외 처리를 적용
         // --- TODO ---
-        
+        (int, int) direction = (moveInfo.dirX, moveInfo.dirY);
+        int distance = moveInfo.distance;
+        (int, int) currentPos = piece.MyPos;
+        for (int i = 1; i <= distance; i++)
+        {
+            (int, int) nextPos = (currentPos.Item1 + direction.Item1 * i, currentPos.Item2 + direction.Item2 * i);
+            if (!Utils.IsInBoard(nextPos)) return false;
+            var blockingPiece = gameManager.Pieces[nextPos.Item1, nextPos.Item2];
+
+            if (blockingPiece != null)
+            {
+                if (blockingPiece.PlayerDirection == piece.PlayerDirection) return false;
+                if (piece.GetType().Name == "Pawn")
+                {
+                    if (direction.Item1 != 1 && direction.Item1 != -1) return false;
+                }
+            }
+            else if (piece.GetType().Name == "Pawn" && (direction.Item1 == 1 || direction.Item1 == -1)) return false;
+            if (nextPos == targetPos) return true;
+        }
+        return false;
         // ------
     }
 
@@ -80,7 +100,26 @@ public class MovementManager : MonoBehaviour
 
         // 왕이 지금 체크 상태인지를 리턴
         // --- TODO ---
-        
+        Debug.Log($"{kingPos.Item1}, {kingPos.Item2}");
+        for (int x = 0; x < Utils.FieldWidth; x++)
+        {
+            for (int y = 0; y < Utils.FieldHeight; y++)
+            {
+                var piece = gameManager.Pieces[x, y];
+                if (piece != null && piece.PlayerDirection != playerDirection)
+                {
+                    foreach (var moveInfo in piece.GetMoves())
+                    {
+                        if (TryMove(piece, kingPos, moveInfo))
+                        {
+                            Debug.Log($"{piece}, {kingPos.Item1}, {kingPos.Item2} {"->"} {x},{y}, {moveInfo.dirX}, {moveInfo.dirY}, {moveInfo.distance}");
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
         // ------
     }
 
@@ -90,7 +129,29 @@ public class MovementManager : MonoBehaviour
 
         // 가능한 움직임을 표시
         // --- TODO ---
-        
+        foreach (var moveInfo in piece.GetMoves())
+        {
+            for (int i = 1; i <= moveInfo.distance; i++)
+            {
+                (int, int) nextPos = (piece.MyPos.Item1 + moveInfo.dirX * i,  piece.MyPos.Item2 + moveInfo.dirY * i);
+
+                if (!Utils.IsInBoard(nextPos)) break;
+
+                if (TryMove(piece, nextPos, moveInfo))
+                {
+                    GameObject effect = Instantiate(effectPrefab, effectParent);
+                    Vector2 tmp = Utils.ToRealPos(nextPos);
+                    effect.transform.position = new Vector3(tmp.x, tmp.y, 0);
+                    currentEffects.Add(effect);
+                    var blockingPiece = gameManager.Pieces[nextPos.Item1, nextPos.Item2];
+                    if (blockingPiece != null) break;
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
         // ------
     }
 

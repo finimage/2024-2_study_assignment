@@ -34,7 +34,15 @@ public class ClickHandler : MonoBehaviour
         if (!Utils.IsInBoard(boardPos)) return;
         // 클릭된 piece을 검증하고, 가능한 이동 경로를 표시
         // --- TODO ---
-        
+        Piece piece = gameManager.Pieces[boardPos.Item1, boardPos.Item2];
+        if (piece != null && piece.PlayerDirection == gameManager.CurrentTurn)
+        {
+            selectedPiece = piece;
+            dragOffset = selectedPiece.transform.position - mousePosition;
+            originalPosition = selectedPiece.transform.position;
+            isDragging = true;
+            gameManager.ShowPossibleMoves(selectedPiece);
+        }
         // ------
     }
 
@@ -58,7 +66,18 @@ public class ClickHandler : MonoBehaviour
             // piece의 이동을 검증하고, 이동시킴
             // effect를 초기화
             // --- TODO ---
-            
+            Debug.Log($"{boardPos.Item1},{boardPos.Item2}");
+            if (gameManager.IsValidMove(selectedPiece, boardPos))
+            {
+                gameManager.Move(selectedPiece, boardPos);
+            }
+            else
+            {
+                selectedPiece.transform.position = originalPosition;
+            }
+            gameManager.ClearEffects();
+            selectedPiece = null;
+            isDragging = false;
             // ------
         }
     }

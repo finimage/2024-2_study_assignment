@@ -30,7 +30,14 @@ public abstract class Piece : MonoBehaviour
     {
         // direction에 따라 sprite를 설정하고 회전함
         // --- TODO ---
-        
+        if (direction == 1)
+        {
+            MySpriteRenderer.sprite = WhiteSprite;
+        }
+        else
+        {
+            MySpriteRenderer.sprite = BlackSprite;
+        }
         // ------
     }
 
@@ -38,7 +45,9 @@ public abstract class Piece : MonoBehaviour
     {
         // 말을 이동시킴
         // --- TODO ---
-        
+        MyPos = targetPos;
+        Vector2 tmp = Utils.ToRealPos(MyPos);
+        transform.position = new Vector3(tmp.x, tmp.y, 0);
         // ------
     }
 
